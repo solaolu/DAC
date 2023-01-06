@@ -113,14 +113,6 @@ namespace Assessment.API.Controllers
 
         }
 
-        //[HttpGet]
-        //[Route("all")]
-        //[SwaggerOperation(Summary = "Get all users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            return Ok(new Response { Status = "Success", Message = "***Not completed****" });
-        }
-
         private JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

@@ -6,7 +6,7 @@ using Assessment.API.Interface;
 
 namespace Assessment.API.Data
 {
-    public class UserStore: IUserStore<User>, IUserPasswordStore<User>, IUserRoleStore<User>, IUserBioDataStore<User>
+    public class UserStore: IUserStore<User>, IUserPasswordStore<User>, IUserRoleStore<User>
     //, IUserEmailStore<User>, IUserPhoneNumberStore<User>, IUserTwoFactorStore<User>, IUserRoleStore<User>
     {
         private readonly string _connectionString;
@@ -317,46 +317,5 @@ namespace Assessment.API.Data
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
-        {
-            var queryString = $"SELECT * FROM [ApiUser]";
-            using (SqlConnection connection = new SqlConnection(
-            _connectionString))
-            {
-                await connection.OpenAsync();
-                SqlCommand cmd = new SqlCommand(queryString, connection);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                DataTable dt = reader.GetSchemaTable();
-
-                if (reader.HasRows)
-                {
-                    HashSet<User> users = new HashSet<User>();
-                    User user = new User();
-                    while (reader.Read())
-                    {
-                        user.Id = reader.GetInt32(0);
-                        user.UserName = reader.GetString(1);
-                        user.NormalizedUserName = reader.GetString(2);
-                        user.Email = reader.GetString(3);
-                        user.NormalizedEmail = reader.GetString(4);
-                        user.EmailConfirmed = reader.GetBoolean(5);
-                        user.PasswordHash = reader.GetString(6);
-                        user.PhoneNumber = reader.GetString(7);
-                        user.PhoneNumberConfirmed = reader.GetBoolean(8);
-                        user.TwoFactorEnabled = reader.GetBoolean(9);
-                        user.FirstName = reader.GetString(10);
-                        user.LastName = reader.GetString(11);
-
-                        users.Add(user);
-                        reader.NextResult();
-
-                    }
-
-                    return users;
-                }
-            }
-            return null;
-        }
     }
 }
